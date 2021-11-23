@@ -15,7 +15,7 @@ import (
 var JwtAuthentication = func(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		notAuth := []string{"/api/user/new", "/api/user/login"} // Doğrulama istemeyen endpointler
+		notAuth := []string{} // Doğrulama istemeyen endpointler
 		requestPath := r.URL.Path                               // mevcut istek yolu
 
 		// Gelen isteğin doğrulama isteyip istemediği kontrol edilir
