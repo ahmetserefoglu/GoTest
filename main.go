@@ -30,8 +30,9 @@ router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 }*/
 
 import (
+	"ApiGateway/app"
+	"ApiGateway/controllers"
 	u "ApiGateway/utils"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -59,19 +60,21 @@ func returnAllProducts(w http.ResponseWriter, r *http.Request) {
 	//var jsonData []Product
     body, err := ioutil.ReadAll(resp.Body) // response body is []byte
     fmt.Println(string(body))   
-	response := u.Message(true, "Hesap başarıyla yaratıldı!")
+	response := u.Message(true, "Veriler Cekildi!")
 	response["status"] = http.StatusOK
 	w.Header().Add("Content-Type", "application/json")
-	response["products"] = json.NewEncoder(w).Encode(string(body))
+	response["products"] = string(body)
 	u.Respond(w, response)
 }
 
 func main() {
 
 	router := mux.NewRouter()
-	//router.Use(app.JwtAuthentication) // Middleware'e JWT kimlik doğrulaması eklenir
+	router.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
+	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 	router.HandleFunc("/api/product", returnAllProducts).Methods("GET")
 
+	router.Use(app.JwtAuthentication) // Middleware'e JWT kimlik doğrulaması eklenir
 	port := os.Getenv("PORT") // Environment dosyasından port bilgisi getirilir
 	if port == "" {
 		port = "8000" //localhost:8000

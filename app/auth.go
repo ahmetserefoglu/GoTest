@@ -52,6 +52,8 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("token_password")), nil
 		})
+		
+		fmt.Println(err) // Kullanıcı adı console'a basılır
 
 		if err != nil { // Token hatalı ise 403 hatası dönülür
 			response = u.Message(false, "Token hatalı!")
